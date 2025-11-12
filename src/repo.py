@@ -1,4 +1,6 @@
+# For filesystem abstraction routines
 import os
+# To read configuration files
 import configparser
 
 class GitRepository (object):

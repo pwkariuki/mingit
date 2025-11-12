@@ -7,8 +7,6 @@ Created on Thu Jun  5 15:47:43 2025
 """
 # To parse command-line arguments
 import argparse
-# To read configuration files
-import configparser
 # For date/time manipulation
 from datetime import datetime
 # To read the users/group database on Unix
@@ -19,8 +17,6 @@ from fnmatch import fnmatch
 import hashlib
 # Ceiling function from math library
 from math import ceil
-# For filesystem abstraction routines
-import os
 # For regex
 import re
 # To access actual command-line arguments
@@ -28,9 +24,21 @@ import sys
 # Git compresses everything using zlib
 import zlib
 
+from repo import repo_create
+
 argparser = argparse.ArgumentParser(description="The stupidest content tracker")
 argsubparser = argparser.add_subparsers(title="Commands", dest="command")
 argsubparser.required = True
+
+argsp = argsubparser.add_parser("init", help="Initialize a new, empty repository.")
+argsp.add_argument("path",
+                   metavar="directory",
+                   nargs="?",
+                   default=".",
+                   help="Where to create the repository.")
+
+def cmd_init(args):
+    repo_create(args.path)
 
 def main(argv=sys.argv[1:]):
     args = argparser.parse_args(argv)
@@ -41,7 +49,7 @@ def main(argv=sys.argv[1:]):
         # case "checkout"     : cmd_checkout(args)
         # case "commit"       : cmd_commit(args)
         # case "hash-object"  : cmd_hash_object(args)
-        # case "init"         : cmd_init(args)
+        case "init"         : cmd_init(args)
         # case "log"          : cmd_log(args)
         # case "ls-files"     : cmd_ls_files(args)
         # case "ls-tree"      : cmd_ls_tree(args)
