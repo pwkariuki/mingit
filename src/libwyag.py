@@ -29,8 +29,8 @@ import sys
 import zlib
 
 argparser = argparse.ArgumentParser(description="The stupidest content tracker")
-argsubparser = argparser.add_subparsers(title="Commands", dest="command", required=True)
-
+argsubparser = argparser.add_subparsers(title="Commands", dest="command")
+argsubparser.required = True
 
 def main(argv=sys.argv[1:]):
     args = argparser.parse_args(argv)
@@ -50,5 +50,4 @@ def main(argv=sys.argv[1:]):
         # case "show-ref"     : cmd_show_ref(args)
         # case "status"       : cmd_status(args)
         # case "tag"          : cmd_tag(args)
-        case _              : print("Bad command.")
-        
+        case _                : print("Bad command.")
