@@ -104,3 +104,26 @@ def repo_create(path):
         config.write(f)
     
     return repo
+
+def repo_find(path=".", required=True):
+    """Find the root of the current repository."""
+    
+    path = os.path.realpath(path)
+
+    if os.path.isdir(os.path.join(path, ".git")):
+        return GitRepository(path)
+    
+    # Ff we have not returned, recurse on parent
+    parent = os.path.realpath(os.path.join(path, ".."))
+
+    if parent == path:
+        # Base case
+        # os.path.join("/", "..") == "/"
+        # If parent == path, then path is root.
+        if required:
+            raise Exception("Not git directory.")
+        else:
+            return None
+    
+    # Recursive case
+    return repo_find(parent, required)
