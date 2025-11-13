@@ -13,18 +13,14 @@ from datetime import datetime
 import grp, pwd
 # To match filenames against patterns e.g. '.gitignore'
 from fnmatch import fnmatch
-# For hash functions
-import hashlib
 # Ceiling function from math library
 from math import ceil
 # For regex
 import re
 # To access actual command-line arguments
 import sys
-# Git compresses everything using zlib
-import zlib
 
-from repo import repo_create
+from git_repo import repo_create
 
 argparser = argparse.ArgumentParser(description="The stupidest content tracker")
 argsubparser = argparser.add_subparsers(title="Commands", dest="command")
@@ -39,6 +35,8 @@ argsp.add_argument("path",
 
 def cmd_init(args):
     repo_create(args.path)
+
+
 
 def main(argv=sys.argv[1:]):
     args = argparser.parse_args(argv)

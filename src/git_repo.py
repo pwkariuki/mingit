@@ -99,6 +99,7 @@ def repo_create(path):
     with open(repo_file(repo, "HEAD"), "w") as f:
         f.write("ref: refs/heads/master\n")
     
+    # .git/config
     with open(repo_file(repo, "config"), "w") as f:
         config = repo_default_config()
         config.write(f)
@@ -107,13 +108,13 @@ def repo_create(path):
 
 def repo_find(path=".", required=True):
     """Find the root of the current repository."""
-    
+
     path = os.path.realpath(path)
 
     if os.path.isdir(os.path.join(path, ".git")):
         return GitRepository(path)
     
-    # Ff we have not returned, recurse on parent
+    # If we have not returned, recurse on parent
     parent = os.path.realpath(os.path.join(path, ".."))
 
     if parent == path:
