@@ -30,6 +30,16 @@ class GitObject(object):
     def init(self):
         pass
 
+class GitBlob(GitObject):
+    """Content of every file put in git is stored as a blob"""
+    fmt = b"blob"
+
+    def serialize(self):
+        return self.blobdata
+    
+    def deserialize(self, data):
+        self.blobdata = data
+
 def object_read(repo, sha):
     """
     Read object sha from Git repository repo.
@@ -54,11 +64,11 @@ def object_read(repo, sha):
         if size != len(raw)-y-1:
             raise Exception("Malformed object {sha}: bad length")
         
-        # pick constructor
+        # Pick constructor
         match fmt:
-            case b'commit'  : c=GitCommit
-            case b'tree'    : c=GitTree
-            case b'tag'     : c=GitTag
+            # case b'commit'  : c=GitCommit
+            # case b'tree'    : c=GitTree
+            # case b'tag'     : c=GitTag
             case b'blob'    : c=GitBlob
             case _          : 
                 raise Exception(f"Unknown type {fmt.decode("ascii")} for object {sha}")
@@ -84,3 +94,7 @@ def object_write(obj, repo=None):
                 f.write(zlib.compress(result))
     
     return sha
+
+def object_find(repo, name, fmt=None, follow=True):
+    """Name resolution function."""
+    return name

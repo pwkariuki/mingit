@@ -93,7 +93,7 @@ def repo_create(path):
 
     # .git/description
     with open(repo_file(repo, "description"), "w") as f:
-        f.write("Unnamed repository; edit this file 'description' to name the repository.\n")
+        f.write("Unnamed repository: edit this file 'description' to name the repository.\n")
     
     # .git/HEAD
     with open(repo_file(repo, "HEAD"), "w") as f:
