@@ -5,27 +5,27 @@ import configparser
 
 class GitRepository (object):
     """A git repository"""
-    
+
     worktree = None
     gitdir = None
     conf = None
-    
+
     def __init__(self, path, force=False):
         self.worktree = path
         self.gitdir = os.path.join(path, ".git")
-        
+
         if not (force or os.path.isdir(self.gitdir)):
             raise Exception(f'Not a git repository {path}')
-        
+
         # Read configuration file in .git/config
         self.conf = configparser.ConfigParser()
         cf = repo_file(self, "config")
-        
+
         if cf and os.path.exists(cf):
             self.conf.read([cf])
         elif not force:
             raise Exception("Configuration file missing")
-        
+
         if not force:
             vers = int(self.conf.get("core", "reposirotyformatversion"))
             if vers != 0:
@@ -55,7 +55,7 @@ def repo_dir(repo: GitRepository, *path, mkdir=False):
             return path
         else:
             raise Exception(f"Not a directory {path}")
-    
+
     if mkdir:
         os.makedirs(path)
         return path
@@ -85,7 +85,7 @@ def repo_create(path):
             raise Exception(f"{path} is not empty!")
     else:
         os.makedirs(repo.worktree)
-    
+
     assert repo_dir(repo, "branches", mkdir=True) # .git/branches/
     assert repo_dir(repo, "objects", mkdir=True) # .git/objects/
     assert repo_dir(repo, "refs", "tags", mkdir=True) # .git/refs/tags/
@@ -94,16 +94,16 @@ def repo_create(path):
     # .git/description
     with open(repo_file(repo, "description"), "w") as f:
         f.write("Unnamed repository: edit this file 'description' to name the repository.\n")
-    
+
     # .git/HEAD
     with open(repo_file(repo, "HEAD"), "w") as f:
         f.write("ref: refs/heads/master\n")
-    
+
     # .git/config
     with open(repo_file(repo, "config"), "w") as f:
         config = repo_default_config()
         config.write(f)
-    
+
     return repo
 
 def repo_find(path=".", required=True):
@@ -113,7 +113,7 @@ def repo_find(path=".", required=True):
 
     if os.path.isdir(os.path.join(path, ".git")):
         return GitRepository(path)
-    
+
     # If we have not returned, recurse on parent
     parent = os.path.realpath(os.path.join(path, ".."))
 
@@ -125,6 +125,6 @@ def repo_find(path=".", required=True):
             raise Exception("Not git directory.")
         else:
             return None
-    
+
     # Recursive case
     return repo_find(parent, required)
